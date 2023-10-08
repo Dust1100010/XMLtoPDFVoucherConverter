@@ -10,6 +10,7 @@ namespace XMLtoPDFVoucherConverter
         string _directoryPath = "C:/XMLtoPDFConverter";
         Color _mainColor;
         Color _secondaryColor;
+        PDF pdf = new PDF();
 
         public frmXMLConverter()
         {
@@ -128,23 +129,21 @@ namespace XMLtoPDFVoucherConverter
        
         private void lblMainColor_DoubleClick(object sender, EventArgs e)
         {
-            _mainColor = SelectedColorPDF();
-            lblMainColor.ForeColor = _mainColor;
+            if (pdf.SelectedColorPDF() == Color.Empty) _secondaryColor = Color.Black;
+            else
+            {
+                _mainColor = pdf.SelectedColorPDF();
+                lblMainColor.ForeColor = _mainColor;
+            }           
         }
         private void lblSecondaryColor_DoubleClick(object sender, EventArgs e)
         {
-            _secondaryColor = SelectedColorPDF();
-            lblSecondaryColor.ForeColor = _secondaryColor;
-        }
-        public Color SelectedColorPDF()
-        {
-            Color selectedColor = Color.Empty;
-            ColorDialog colorDialog = new ColorDialog();
-            if (colorDialog.ShowDialog() == DialogResult.OK)
+            if (pdf.SelectedColorPDF() == Color.Empty) _secondaryColor = Color.Blue;
+            else
             {
-                selectedColor = colorDialog.Color;
-            }
-            return selectedColor;
-        }     
+                _secondaryColor = pdf.SelectedColorPDF();
+                lblSecondaryColor.ForeColor = _secondaryColor;
+            }            
+        }       
     }
 }

@@ -40,6 +40,7 @@
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.picLogo = new System.Windows.Forms.PictureBox();
             this.ibtnUploadXml = new FontAwesome.Sharp.IconButton();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             ((System.ComponentModel.ISupportInitialize)(this.picTemplates)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
             this.SuspendLayout();
@@ -60,7 +61,7 @@
             this.ibtnPreviewTemplate.IconColor = System.Drawing.Color.Black;
             this.ibtnPreviewTemplate.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.ibtnPreviewTemplate.IconSize = 30;
-            this.ibtnPreviewTemplate.Location = new System.Drawing.Point(459, 419);
+            this.ibtnPreviewTemplate.Location = new System.Drawing.Point(614, 250);
             this.ibtnPreviewTemplate.Name = "ibtnPreviewTemplate";
             this.ibtnPreviewTemplate.Size = new System.Drawing.Size(29, 31);
             this.ibtnPreviewTemplate.TabIndex = 3;
@@ -73,7 +74,7 @@
             this.ibtnPrint.IconChar = FontAwesome.Sharp.IconChar.Print;
             this.ibtnPrint.IconColor = System.Drawing.Color.Black;
             this.ibtnPrint.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.ibtnPrint.Location = new System.Drawing.Point(610, 353);
+            this.ibtnPrint.Location = new System.Drawing.Point(611, 353);
             this.ibtnPrint.Name = "ibtnPrint";
             this.ibtnPrint.Size = new System.Drawing.Size(71, 60);
             this.ibtnPrint.TabIndex = 5;
@@ -84,7 +85,7 @@
             // 
             this.lblMainColor.AutoSize = true;
             this.lblMainColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblMainColor.Location = new System.Drawing.Point(394, 95);
+            this.lblMainColor.Location = new System.Drawing.Point(480, 31);
             this.lblMainColor.Name = "lblMainColor";
             this.lblMainColor.Size = new System.Drawing.Size(85, 15);
             this.lblMainColor.TabIndex = 7;
@@ -99,7 +100,7 @@
             this.ibtnNextTemplate.IconColor = System.Drawing.Color.Black;
             this.ibtnNextTemplate.IconFont = FontAwesome.Sharp.IconFont.Auto;
             this.ibtnNextTemplate.IconSize = 30;
-            this.ibtnNextTemplate.Location = new System.Drawing.Point(494, 419);
+            this.ibtnNextTemplate.Location = new System.Drawing.Point(649, 250);
             this.ibtnNextTemplate.Name = "ibtnNextTemplate";
             this.ibtnNextTemplate.Size = new System.Drawing.Size(29, 31);
             this.ibtnNextTemplate.TabIndex = 8;
@@ -112,18 +113,19 @@
             this.ibtnPDF.IconChar = FontAwesome.Sharp.IconChar.FilePdf;
             this.ibtnPDF.IconColor = System.Drawing.Color.Black;
             this.ibtnPDF.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.ibtnPDF.Location = new System.Drawing.Point(610, 287);
+            this.ibtnPDF.Location = new System.Drawing.Point(611, 287);
             this.ibtnPDF.Name = "ibtnPDF";
             this.ibtnPDF.Size = new System.Drawing.Size(71, 60);
             this.ibtnPDF.TabIndex = 9;
             this.toolTip1.SetToolTip(this.ibtnPDF, "Generar PDF");
             this.ibtnPDF.UseVisualStyleBackColor = true;
+            this.ibtnPDF.Click += new System.EventHandler(this.ibtnPDF_Click);
             // 
             // lblSecondaryColor
             // 
             this.lblSecondaryColor.AutoSize = true;
             this.lblSecondaryColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblSecondaryColor.Location = new System.Drawing.Point(506, 95);
+            this.lblSecondaryColor.Location = new System.Drawing.Point(480, 56);
             this.lblSecondaryColor.Name = "lblSecondaryColor";
             this.lblSecondaryColor.Size = new System.Drawing.Size(98, 15);
             this.lblSecondaryColor.TabIndex = 10;
@@ -135,16 +137,16 @@
             // 
             this.lstXlms.FormattingEnabled = true;
             this.lstXlms.ItemHeight = 15;
-            this.lstXlms.Location = new System.Drawing.Point(12, 41);
+            this.lstXlms.Location = new System.Drawing.Point(9, 41);
             this.lstXlms.Name = "lstXlms";
-            this.lstXlms.Size = new System.Drawing.Size(362, 409);
+            this.lstXlms.Size = new System.Drawing.Size(376, 409);
             this.lstXlms.TabIndex = 13;
             // 
             // picLogo
             // 
             this.picLogo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picLogo.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.picLogo.Location = new System.Drawing.Point(459, 8);
+            this.picLogo.Location = new System.Drawing.Point(394, 12);
             this.picLogo.Name = "picLogo";
             this.picLogo.Size = new System.Drawing.Size(80, 80);
             this.picLogo.TabIndex = 16;
@@ -158,19 +160,27 @@
             this.ibtnUploadXml.IconChar = FontAwesome.Sharp.IconChar.None;
             this.ibtnUploadXml.IconColor = System.Drawing.Color.Black;
             this.ibtnUploadXml.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.ibtnUploadXml.Location = new System.Drawing.Point(12, 12);
+            this.ibtnUploadXml.Location = new System.Drawing.Point(9, 12);
             this.ibtnUploadXml.Name = "ibtnUploadXml";
-            this.ibtnUploadXml.Size = new System.Drawing.Size(362, 23);
+            this.ibtnUploadXml.Size = new System.Drawing.Size(376, 23);
             this.ibtnUploadXml.TabIndex = 15;
             this.ibtnUploadXml.Text = "Selecciona los XML";
             this.ibtnUploadXml.UseVisualStyleBackColor = true;
             this.ibtnUploadXml.Click += new System.EventHandler(this.ibtnUploadXml_Click);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(394, 427);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(288, 23);
+            this.progressBar1.TabIndex = 17;
+            // 
             // frmXMLConverter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(690, 462);
+            this.ClientSize = new System.Drawing.Size(696, 462);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.picLogo);
             this.Controls.Add(this.ibtnUploadXml);
             this.Controls.Add(this.lstXlms);
@@ -205,5 +215,6 @@
         private ToolTip toolTip1;
         private FontAwesome.Sharp.IconButton ibtnUploadXml;
         private PictureBox picLogo;
+        private ProgressBar progressBar1;
     }
 }

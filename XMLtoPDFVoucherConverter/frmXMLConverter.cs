@@ -1,9 +1,8 @@
-
-
 namespace XMLtoPDFVoucherConverter
 {
     public partial class frmXMLConverter : Form
     {
+        Dictionary<string, string> _vouchers;
         List<string> _xmlNames;
         List<string> _xmlPaths;
         string _logoPath = string.Empty;
@@ -11,10 +10,18 @@ namespace XMLtoPDFVoucherConverter
         Color _mainColor;
         Color _secondaryColor;
         PDF pdf = new PDF();
+        XML xml = new XML();
 
         public frmXMLConverter()
         {
             InitializeComponent();
+            pdf.ProgresoActualizado += (progreso) =>
+            {
+                Invoke(new Action(() =>
+                {
+                    progressBar1.Value = progreso;
+                }));
+            };
         }
         private void frmXMLConverter_Load(object sender, EventArgs e)
         {
@@ -28,6 +35,7 @@ namespace XMLtoPDFVoucherConverter
                     {
                         _logoPath = item.FullName;
                         ShowLogoInPictureBox();
+                        break;
                     }
                 }
             }
@@ -36,65 +44,35 @@ namespace XMLtoPDFVoucherConverter
         /***XML***/
         private void ibtnUploadXml_Click(object sender, EventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Multiselect = true;
-            openFileDialog.Title = "Elige los archivos XML";
-            openFileDialog.Filter = "Archivos XML|*.xml";
-            if(openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                AddXmlToList(openFileDialog.SafeFileNames.ToList(), openFileDialog.FileNames.ToList());
-            }
-        }
-        public void AddXmlToList(List<string> names, List<string> paths)
-        {
             try
             {
-                if (names == null) throw new Exception("Elige archivos XML");
-                if(_xmlNames == null) _xmlNames = new List<string>();
-                if (_xmlPaths == null) _xmlPaths = new List<string>();
-
-                foreach (var name in names)
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Multiselect = true;
+                openFileDialog.Title = "Elige los archivos XML";
+                openFileDialog.Filter = "Archivos XML|*.xml";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    if (!ExistXmlOnList(name))
+                    if (openFileDialog.SafeFileNames.ToList() == null) throw new Exception("Elige archivos XML");
+                    List<string> listNames = xml.AddXmlNamesToList(openFileDialog.SafeFileNames.ToList(), _xmlNames);
+                    List<string> listPaths = xml.AddXmlPathsToList(openFileDialog.FileNames.ToList(), _xmlPaths);
+                    _xmlNames = new List<string>();
+                    _xmlPaths = new List<string>();
+                    _vouchers = new Dictionary<string, string>();
+                    foreach (var name in listNames)
                     {
                         _xmlNames.Add(name);
-                        _xmlPaths.Add(GetXmlPath(name, paths));
+                        _vouchers.Add(name, Properties.Resources.comprobanteElectronico.ToString());
                     }
+                    foreach (var path in listPaths) _xmlPaths.Add(path);
+                 
+                    lstXlms.DataSource = null;
+                    lstXlms.DataSource = _xmlNames;
                 }
-                lstXlms.DataSource = null;
-                lstXlms.DataSource = _xmlNames;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        private bool ExistXmlOnList(string xml)
-        {
-            bool exist = false;
-            foreach (var item in _xmlNames)
-            {
-                if (item == xml)
-                {
-                    exist = true;
-                    break;
-                }
-            }
-            return exist;
-        }
-        private string GetXmlPath(string xmlName, List<string> paths)
-        {
-            string path = string.Empty;
-            foreach (var item in paths)
-            {
-                if (item.Contains(xmlName))
-                {
-                    path = item;
-                    break;
-                }
-            }
-
-            return path;
+            }            
         }
 
         /***LOGO***/
@@ -125,8 +103,7 @@ namespace XMLtoPDFVoucherConverter
             picLogo.Image = imagen;           
         }
 
-        /***PDF VIEWER***/
-       
+        /***PDF VIEWER***/     
         private void lblMainColor_DoubleClick(object sender, EventArgs e)
         {
             if (pdf.SelectedColorPDF() == Color.Empty) _secondaryColor = Color.Black;
@@ -144,6 +121,11 @@ namespace XMLtoPDFVoucherConverter
                 _secondaryColor = pdf.SelectedColorPDF();
                 lblSecondaryColor.ForeColor = _secondaryColor;
             }            
-        }       
+        }
+        private async void ibtnPDF_Click(object sender, EventArgs e)
+        {
+            progressBar1.Value = 0;
+            await pdf.GeneraPDF(_vouchers, iText.Kernel.Geom.PageSize.A4);
+        }
     }
 }

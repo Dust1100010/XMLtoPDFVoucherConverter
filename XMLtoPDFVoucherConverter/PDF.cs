@@ -12,71 +12,110 @@ using iText.Kernel.Pdf.Canvas;
 using iText.Kernel.Font;
 using iText.IO.Font.Constants;
 using iText.Kernel.Colors;
+using System.Globalization;
 
 namespace XMLtoPDFVoucherConverter
 {
     public class PDF
     {
-        public event Action<int> ProgresoActualizado;
-
-        public System.Drawing.Color SelectedColorPDF()
+        public int Red { get; set; }
+        public int Green { get; set; }
+        public int Blue { get; set; }
+    
+        public string AmountToText(string monto)
         {
-            System.Drawing.Color selectedColor = System.Drawing.Color.Empty;
-            ColorDialog colorDialog = new ColorDialog();
-            if (colorDialog.ShowDialog() == DialogResult.OK)
-            {
-                selectedColor = colorDialog.Color;
-            }
-            return selectedColor;
+            decimal num;
+            if (decimal.TryParse(monto, out num)) monto = num.ToString("0.00", CultureInfo.InvariantCulture);
+
+            NumToLetters.Letters letras = new NumToLetters.Letters();
+            string montoTexto = letras.Convertir_A_Letras(monto, true);
+            montoTexto = montoTexto.Replace("M.N.", "SOLES");
+
+            return montoTexto;
+        }
+
+        public string CorrectDecimals(string monto)
+        {
+            string montoCorregido = monto;
+            decimal num;
+            if (decimal.TryParse(monto, out num)) montoCorregido = num.ToString("0.00", CultureInfo.InvariantCulture);
+
+            return montoCorregido;
         }
 
         private string validatePDFVoucherName(string path)
         {
-            int version = 1;
+            string originalPath = path;
             string name = Path.GetFileNameWithoutExtension(path) + Path.GetExtension(path);
 
+            int version = 1;
             while (File.Exists(path))
             {
-                name = Path.GetFileNameWithoutExtension(path) + " (" + version.ToString() + ")" + Path.GetExtension(path);
-                path = Path.GetDirectoryName(path)+"/"+ name;
+                name = Path.GetFileNameWithoutExtension(originalPath) + " (" + version.ToString() + ")" + Path.GetExtension(originalPath);
+                path = Path.Combine(Path.GetDirectoryName(originalPath), name);
                 version++;
             }
             return name;
         }
 
-        public async Task GeneraPDF(Dictionary<string, string> voucherHtml, iText.Kernel.Geom.PageSize tipoHoja)
+        public async Task GeneratePDF(string xmlName, string htmlVoucher,string path, iText.Kernel.Geom.PageSize tipoHoja)
         {
-            int totalSteps = voucherHtml.Count;
-            int currentStep = 0;
-
-            FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
-            folderBrowser.RootFolder = Environment.SpecialFolder.MyComputer;
-            if (folderBrowser.ShowDialog() == DialogResult.OK)
+            string pathFile = $"{path}/{Path.GetFileNameWithoutExtension(xmlName)}.pdf";
+            string fileName = $"{path}/{validatePDFVoucherName(pathFile)}";
+            using (FileStream temp = new FileStream(fileName, FileMode.Create))
             {
-                
-                foreach (var voucher in voucherHtml)
+                PdfWriter writer = new PdfWriter(temp);
+                PdfDocument pdf = new PdfDocument(writer);
+                Document doc = new Document(pdf, tipoHoja);
+                ConverterProperties converterProperties = new ConverterProperties();
+                using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(htmlVoucher)))
                 {
-                    string pathFile = $"{folderBrowser.SelectedPath}/{Path.GetFileNameWithoutExtension(voucher.Key)}.pdf";
-                    string fileName = $"{folderBrowser.SelectedPath}/{validatePDFVoucherName(pathFile)}";
-                    using (FileStream temp = new FileStream(fileName, FileMode.Create))
-                    {
-                        PdfWriter writer = new PdfWriter(temp);
-                        PdfDocument pdf = new PdfDocument(writer);
-                        Document doc = new Document(pdf, tipoHoja);
-                        ConverterProperties converterProperties = new ConverterProperties();
-                        using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(voucher.Value)))
-                        {
-                            await Task.Run(() => HtmlConverter.ConvertToPdf(stream, pdf, converterProperties));
-                        }
-                        doc.Close();
-                    }
-                    currentStep++;
-                    int progreso = (int)((double)currentStep / totalSteps * 100);
-                    ProgresoActualizado?.Invoke(progreso);
+                    await Task.Run(() => HtmlConverter.ConvertToPdf(stream, pdf, converterProperties));
                 }
-               
-                MessageBox.Show("PDF generado", "PDF", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }          
+                doc.Close();
+            }
+            MessageBox.Show("PDF generado", "PDFVoucherConverter", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public string GenerateHtmlTemplate(Voucher voucher, string template)
+        {
+            template = template.Replace("@COLOR1", $"rgb({voucher.Company.PrimaryColor.Red},{voucher.Company.PrimaryColor.Green},{voucher.Company.PrimaryColor.Blue})");
+            template = template.Replace("@COLOR2", $"rgb({voucher.Company.SecondaryColor.Red},{voucher.Company.SecondaryColor.Green},{voucher.Company.SecondaryColor.Blue})");
+            template = template.Replace("@LOGO", Program.globalVariables.LogoPath);            
+            template = template.Replace("@COMPANY_ID", voucher.Company.Id);
+            template = template.Replace("@COMPANY_PHONE", voucher.Company.Phone);
+            template = template.Replace("@COMPANY_ADDRESS", voucher.Company.Address);
+            template = template.Replace("@COMPANY", voucher.Company.Name);   
+            
+            template = template.Replace("@CUSTOMER_ID", voucher.Customer.Id);
+            template = template.Replace("@CUSTOMER_TYPE", voucher.Customer.IdType);
+            template = template.Replace("@CUSTOMER_PHONE", voucher.Customer.Phone);
+            template = template.Replace("@CUSTOMER_ADDRESS", voucher.Customer.Address);
+            template = template.Replace("@CUSTOMER", voucher.Customer.Name);        
+            
+            template = template.Replace("@VOUCHER_DATE", voucher.Date.ToString("dd-MM-yyyy"));
+            template = template.Replace("@VOUCHER_ID", voucher.Id);
+            template = template.Replace("@VOUCHER_TOTAL_TEXT", "Son: " + AmountToText(voucher.Amount.ToString()));
+            template = template.Replace("@VOUCHER_TOTAL", CorrectDecimals(voucher.Amount.ToString()));
+            template = template.Replace("@VOUCHER_SUBTOTAL", CorrectDecimals((voucher.Amount-voucher.Tax).ToString()));
+            template = template.Replace("@VOUCHER_TAX", CorrectDecimals(voucher.Tax.ToString()));
+
+            string items = string.Empty;
+            foreach (var item in voucher.Items)
+            {
+                items += @$"<tr>
+                                <td>{item.Code}</td>
+                                <td>{item.Description}</td>
+                                <td>{item.Unit}</td>
+                                <td align='right'>{item.Quality}</td>
+                                <td align='right'>{CorrectDecimals(item.UnitAmount.ToString())}</td>
+                                <td align='right'>{CorrectDecimals(item.TotalAmount.ToString())}</td>
+                            </tr>"; 
+            }
+            template = template.Replace("@VOUCHER_DETAILS", items);
+            template = template.Replace("@VOUCHER", voucher.Type);
+
+            return template;
         }
     }
 }

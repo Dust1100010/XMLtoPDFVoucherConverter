@@ -29,44 +29,18 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.picTemplates = new System.Windows.Forms.PictureBox();
-            this.ibtnPreviewTemplate = new FontAwesome.Sharp.IconButton();
             this.ibtnPrint = new FontAwesome.Sharp.IconButton();
-            this.lblMainColor = new System.Windows.Forms.Label();
-            this.ibtnNextTemplate = new FontAwesome.Sharp.IconButton();
             this.ibtnPDF = new FontAwesome.Sharp.IconButton();
-            this.lblSecondaryColor = new System.Windows.Forms.Label();
             this.lstXlms = new System.Windows.Forms.ListBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.picLogo = new System.Windows.Forms.PictureBox();
             this.ibtnUploadXml = new FontAwesome.Sharp.IconButton();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            ((System.ComponentModel.ISupportInitialize)(this.picTemplates)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
+            this.mnuHeader = new System.Windows.Forms.MenuStrip();
+            this.empresaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.formatoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ayudaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHeader.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // picTemplates
-            // 
-            this.picTemplates.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picTemplates.Location = new System.Drawing.Point(394, 116);
-            this.picTemplates.Name = "picTemplates";
-            this.picTemplates.Size = new System.Drawing.Size(210, 297);
-            this.picTemplates.TabIndex = 2;
-            this.picTemplates.TabStop = false;
-            // 
-            // ibtnPreviewTemplate
-            // 
-            this.ibtnPreviewTemplate.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ibtnPreviewTemplate.IconChar = FontAwesome.Sharp.IconChar.CaretLeft;
-            this.ibtnPreviewTemplate.IconColor = System.Drawing.Color.Black;
-            this.ibtnPreviewTemplate.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.ibtnPreviewTemplate.IconSize = 30;
-            this.ibtnPreviewTemplate.Location = new System.Drawing.Point(614, 250);
-            this.ibtnPreviewTemplate.Name = "ibtnPreviewTemplate";
-            this.ibtnPreviewTemplate.Size = new System.Drawing.Size(29, 31);
-            this.ibtnPreviewTemplate.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.ibtnPreviewTemplate, "Plantilla anterior");
-            this.ibtnPreviewTemplate.UseVisualStyleBackColor = true;
             // 
             // ibtnPrint
             // 
@@ -74,38 +48,12 @@
             this.ibtnPrint.IconChar = FontAwesome.Sharp.IconChar.Print;
             this.ibtnPrint.IconColor = System.Drawing.Color.Black;
             this.ibtnPrint.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.ibtnPrint.Location = new System.Drawing.Point(611, 353);
+            this.ibtnPrint.Location = new System.Drawing.Point(474, 334);
             this.ibtnPrint.Name = "ibtnPrint";
             this.ibtnPrint.Size = new System.Drawing.Size(71, 60);
             this.ibtnPrint.TabIndex = 5;
             this.toolTip1.SetToolTip(this.ibtnPrint, "Imprimir");
             this.ibtnPrint.UseVisualStyleBackColor = true;
-            // 
-            // lblMainColor
-            // 
-            this.lblMainColor.AutoSize = true;
-            this.lblMainColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblMainColor.Location = new System.Drawing.Point(480, 31);
-            this.lblMainColor.Name = "lblMainColor";
-            this.lblMainColor.Size = new System.Drawing.Size(85, 15);
-            this.lblMainColor.TabIndex = 7;
-            this.lblMainColor.Text = "Color Principal";
-            this.toolTip1.SetToolTip(this.lblMainColor, "Doble Click para elegir el color");
-            this.lblMainColor.DoubleClick += new System.EventHandler(this.lblMainColor_DoubleClick);
-            // 
-            // ibtnNextTemplate
-            // 
-            this.ibtnNextTemplate.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.ibtnNextTemplate.IconChar = FontAwesome.Sharp.IconChar.CaretRight;
-            this.ibtnNextTemplate.IconColor = System.Drawing.Color.Black;
-            this.ibtnNextTemplate.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.ibtnNextTemplate.IconSize = 30;
-            this.ibtnNextTemplate.Location = new System.Drawing.Point(649, 250);
-            this.ibtnNextTemplate.Name = "ibtnNextTemplate";
-            this.ibtnNextTemplate.Size = new System.Drawing.Size(29, 31);
-            this.ibtnNextTemplate.TabIndex = 8;
-            this.toolTip1.SetToolTip(this.ibtnNextTemplate, "Siguiente Plantilla");
-            this.ibtnNextTemplate.UseVisualStyleBackColor = true;
             // 
             // ibtnPDF
             // 
@@ -113,7 +61,7 @@
             this.ibtnPDF.IconChar = FontAwesome.Sharp.IconChar.FilePdf;
             this.ibtnPDF.IconColor = System.Drawing.Color.Black;
             this.ibtnPDF.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.ibtnPDF.Location = new System.Drawing.Point(611, 287);
+            this.ibtnPDF.Location = new System.Drawing.Point(397, 334);
             this.ibtnPDF.Name = "ibtnPDF";
             this.ibtnPDF.Size = new System.Drawing.Size(71, 60);
             this.ibtnPDF.TabIndex = 9;
@@ -121,38 +69,14 @@
             this.ibtnPDF.UseVisualStyleBackColor = true;
             this.ibtnPDF.Click += new System.EventHandler(this.ibtnPDF_Click);
             // 
-            // lblSecondaryColor
-            // 
-            this.lblSecondaryColor.AutoSize = true;
-            this.lblSecondaryColor.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblSecondaryColor.Location = new System.Drawing.Point(480, 56);
-            this.lblSecondaryColor.Name = "lblSecondaryColor";
-            this.lblSecondaryColor.Size = new System.Drawing.Size(98, 15);
-            this.lblSecondaryColor.TabIndex = 10;
-            this.lblSecondaryColor.Text = "Color Secundario";
-            this.toolTip1.SetToolTip(this.lblSecondaryColor, "Doble Click para elegir el color");
-            this.lblSecondaryColor.DoubleClick += new System.EventHandler(this.lblSecondaryColor_DoubleClick);
-            // 
             // lstXlms
             // 
             this.lstXlms.FormattingEnabled = true;
             this.lstXlms.ItemHeight = 15;
-            this.lstXlms.Location = new System.Drawing.Point(9, 41);
+            this.lstXlms.Location = new System.Drawing.Point(12, 65);
             this.lstXlms.Name = "lstXlms";
             this.lstXlms.Size = new System.Drawing.Size(376, 409);
             this.lstXlms.TabIndex = 13;
-            // 
-            // picLogo
-            // 
-            this.picLogo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picLogo.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.picLogo.Location = new System.Drawing.Point(394, 12);
-            this.picLogo.Name = "picLogo";
-            this.picLogo.Size = new System.Drawing.Size(80, 80);
-            this.picLogo.TabIndex = 16;
-            this.picLogo.TabStop = false;
-            this.toolTip1.SetToolTip(this.picLogo, "Elige el logo de tu empresa");
-            this.picLogo.DoubleClick += new System.EventHandler(this.picLogo_DoubleClick);
             // 
             // ibtnUploadXml
             // 
@@ -160,7 +84,7 @@
             this.ibtnUploadXml.IconChar = FontAwesome.Sharp.IconChar.None;
             this.ibtnUploadXml.IconColor = System.Drawing.Color.Black;
             this.ibtnUploadXml.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            this.ibtnUploadXml.Location = new System.Drawing.Point(9, 12);
+            this.ibtnUploadXml.Location = new System.Drawing.Point(12, 36);
             this.ibtnUploadXml.Name = "ibtnUploadXml";
             this.ibtnUploadXml.Size = new System.Drawing.Size(376, 23);
             this.ibtnUploadXml.TabIndex = 15;
@@ -170,51 +94,78 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(394, 427);
+            this.progressBar1.Location = new System.Drawing.Point(397, 451);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(288, 23);
             this.progressBar1.TabIndex = 17;
+            // 
+            // mnuHeader
+            // 
+            this.mnuHeader.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.mnuHeader.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.empresaToolStripMenuItem,
+            this.formatoToolStripMenuItem,
+            this.ayudaToolStripMenuItem});
+            this.mnuHeader.Location = new System.Drawing.Point(0, 0);
+            this.mnuHeader.Name = "mnuHeader";
+            this.mnuHeader.Size = new System.Drawing.Size(751, 24);
+            this.mnuHeader.TabIndex = 19;
+            this.mnuHeader.Text = "menuStrip1";
+            // 
+            // empresaToolStripMenuItem
+            // 
+            this.empresaToolStripMenuItem.Name = "empresaToolStripMenuItem";
+            this.empresaToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            this.empresaToolStripMenuItem.Text = "Empresa";
+            this.empresaToolStripMenuItem.Click += new System.EventHandler(this.empresaToolStripMenuItem_Click);
+            // 
+            // formatoToolStripMenuItem
+            // 
+            this.formatoToolStripMenuItem.Name = "formatoToolStripMenuItem";
+            this.formatoToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.formatoToolStripMenuItem.Text = "Plantilla";
+            // 
+            // ayudaToolStripMenuItem
+            // 
+            this.ayudaToolStripMenuItem.Name = "ayudaToolStripMenuItem";
+            this.ayudaToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
+            this.ayudaToolStripMenuItem.Text = "Ayuda";
             // 
             // frmXMLConverter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(696, 462);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(751, 487);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.picLogo);
             this.Controls.Add(this.ibtnUploadXml);
             this.Controls.Add(this.lstXlms);
-            this.Controls.Add(this.lblSecondaryColor);
             this.Controls.Add(this.ibtnPDF);
-            this.Controls.Add(this.ibtnNextTemplate);
-            this.Controls.Add(this.lblMainColor);
             this.Controls.Add(this.ibtnPrint);
-            this.Controls.Add(this.ibtnPreviewTemplate);
-            this.Controls.Add(this.picTemplates);
+            this.Controls.Add(this.mnuHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.MainMenuStrip = this.mnuHeader;
             this.Name = "frmXMLConverter";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "XML To PDF Converter";
             this.Load += new System.EventHandler(this.frmXMLConverter_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.picTemplates)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).EndInit();
+            this.mnuHeader.ResumeLayout(false);
+            this.mnuHeader.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-        private PictureBox picTemplates;
-        private FontAwesome.Sharp.IconButton ibtnPreviewTemplate;
         private FontAwesome.Sharp.IconButton ibtnPrint;
-        private Label lblMainColor;
-        private FontAwesome.Sharp.IconButton ibtnNextTemplate;
         private FontAwesome.Sharp.IconButton ibtnPDF;
-        private Label lblSecondaryColor;
         private ListBox lstXlms;
         private ToolTip toolTip1;
         private FontAwesome.Sharp.IconButton ibtnUploadXml;
-        private PictureBox picLogo;
         private ProgressBar progressBar1;
+        private MenuStrip mnuHeader;
+        private ToolStripMenuItem empresaToolStripMenuItem;
+        private ToolStripMenuItem ayudaToolStripMenuItem;
+        private ToolStripMenuItem formatoToolStripMenuItem;
     }
 }

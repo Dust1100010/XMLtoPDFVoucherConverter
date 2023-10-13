@@ -1,131 +1,115 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
 namespace XMLtoPDFVoucherConverter
 {
     public partial class frmXMLConverter : Form
     {
-        Dictionary<string, string> _vouchers;
-        List<string> _xmlNames;
-        List<string> _xmlPaths;
-        string _logoPath = string.Empty;
-        string _directoryPath = "C:/XMLtoPDFConverter";
-        Color _mainColor;
-        Color _secondaryColor;
-        PDF pdf = new PDF();
-        XML xml = new XML();
+        List<string> _xmlNames = new List<string>();
+        List<string> _xmlPaths = new List<string>();
 
         public frmXMLConverter()
         {
             InitializeComponent();
-            pdf.ProgresoActualizado += (progreso) =>
-            {
-                Invoke(new Action(() =>
-                {
-                    progressBar1.Value = progreso;
-                }));
-            };
         }
         private void frmXMLConverter_Load(object sender, EventArgs e)
         {
-            var directory = new DirectoryInfo(_directoryPath);
+            var directory = new DirectoryInfo(Program.globalVariables.DirectoryPath);
             if (!directory.Exists) directory.Create();
             else
             {
-                foreach (var item in directory.GetFiles())
-                {
-                    if (Path.GetFileNameWithoutExtension(item.Name) == "Logo")
-                    {
-                        _logoPath = item.FullName;
-                        ShowLogoInPictureBox();
-                        break;
-                    }
-                }
+                Company company = new Company();
+                PictureBox pictureBox = new PictureBox();
+                company.ShowLogo(pictureBox);
+
+                if (!File.Exists($"{Program.globalVariables.DirectoryPath}/Company.json"))
+                {                   
+                    company.CreateCompanyJson();
+                }              
             }
         }
         
         /***XML***/
         private void ibtnUploadXml_Click(object sender, EventArgs e)
         {
-            try
-            {
-                OpenFileDialog openFileDialog = new OpenFileDialog();
-                openFileDialog.Multiselect = true;
-                openFileDialog.Title = "Elige los archivos XML";
-                openFileDialog.Filter = "Archivos XML|*.xml";
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    if (openFileDialog.SafeFileNames.ToList() == null) throw new Exception("Elige archivos XML");
-                    List<string> listNames = xml.AddXmlNamesToList(openFileDialog.SafeFileNames.ToList(), _xmlNames);
-                    List<string> listPaths = xml.AddXmlPathsToList(openFileDialog.FileNames.ToList(), _xmlPaths);
-                    _xmlNames = new List<string>();
-                    _xmlPaths = new List<string>();
-                    _vouchers = new Dictionary<string, string>();
-                    foreach (var name in listNames)
-                    {
-                        _xmlNames.Add(name);
-                        _vouchers.Add(name, Properties.Resources.comprobanteElectronico.ToString());
-                    }
-                    foreach (var path in listPaths) _xmlPaths.Add(path);
-                 
-                    lstXlms.DataSource = null;
-                    lstXlms.DataSource = _xmlNames;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message, this.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }            
+            XML xml = new XML();
+            _xmlPaths = xml.AddXmlPathsToList(_xmlPaths);
+            _xmlNames = xml.AddXmlNamesToList(_xmlPaths);
+            lstXlms.DataSource = null;
+            lstXlms.DataSource = _xmlNames;
         }
 
-        /***LOGO***/
-        private void picLogo_DoubleClick(object sender, EventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Title = "Elige el logo de tu empresa";
-            openFileDialog.Filter = "Archivos de imagen|*.jpg;*.jpeg;*.png";
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                _logoPath = $"{_directoryPath}/Logo{Path.GetExtension(openFileDialog.FileName)}";
-                File.Copy(openFileDialog.FileName, _logoPath, true);
-                ShowLogoInPictureBox();
-
-                var directory = new DirectoryInfo(_directoryPath);
-                foreach (var file in directory.GetFiles())
-                {
-                    if(file.Name != Path.GetFileName(_logoPath)) File.Delete(file.FullName);
-                }
-            }
-        }
-        private void ShowLogoInPictureBox()
-        {
-            byte[] imagenBytes = File.ReadAllBytes(_logoPath);
-            MemoryStream ms = new MemoryStream(imagenBytes);
-            Image imagen = Image.FromStream(ms);
-            picLogo.SizeMode = PictureBoxSizeMode.StretchImage;
-            picLogo.Image = imagen;           
-        }
-
-        /***PDF VIEWER***/     
-        private void lblMainColor_DoubleClick(object sender, EventArgs e)
-        {
-            if (pdf.SelectedColorPDF() == Color.Empty) _secondaryColor = Color.Black;
-            else
-            {
-                _mainColor = pdf.SelectedColorPDF();
-                lblMainColor.ForeColor = _mainColor;
-            }           
-        }
-        private void lblSecondaryColor_DoubleClick(object sender, EventArgs e)
-        {
-            if (pdf.SelectedColorPDF() == Color.Empty) _secondaryColor = Color.Blue;
-            else
-            {
-                _secondaryColor = pdf.SelectedColorPDF();
-                lblSecondaryColor.ForeColor = _secondaryColor;
-            }            
-        }
         private async void ibtnPDF_Click(object sender, EventArgs e)
         {
-            progressBar1.Value = 0;
-            await pdf.GeneraPDF(_vouchers, iText.Kernel.Geom.PageSize.A4);
+            Company company = new Company();
+            Voucher voucher = new Voucher();
+            voucher.Company = company.CompanyDetails();
+            voucher.Customer = new Customer
+            {
+                Name = "Antonio Cruz",
+                Id = "71494772",
+                IdType = "Ruc",
+                Address = "Calle Cesar Vallejo 411",
+                Email = "antonioscrl@hotmail.com",
+                Phone = "987654321"
+            };
+
+            voucher.Type = "Factura";
+            voucher.Date = DateTime.Now;
+            voucher.Id = "FE01-234";
+            voucher.Tax = 42;
+            voucher.Amount = 2445;
+
+            voucher.Items = new List<VoucherItem>
+            {
+                new VoucherItem
+                {
+                    Code = "COD001",
+                    Description = "iPhone 15 128GB 6GB Negro",
+                    Quality = 1,
+                    Unit = "UNIDAD",
+                    UnitAmount = 1000,
+                    TotalAmount = 1180
+                },
+                new VoucherItem
+                {
+                    Code = "COD002",
+                    Description = "iPhone 14 128GB 6GB Negro",
+                    Quality = 1,
+                    Unit = "UNIDAD",
+                    UnitAmount = 1000,
+                    TotalAmount = 1180
+                },
+                new VoucherItem
+                {
+                    Code = "COD003",
+                    Description = "iPhone 13 128GB 6GB Negro",
+                    Quality = 1,
+                    Unit = "UNIDAD",
+                    UnitAmount = 1000,
+                    TotalAmount = 1180
+                }
+            };
+
+            PDF pdf = new PDF();
+
+            string html = pdf.GenerateHtmlTemplate(voucher, Properties.Resources.VoucherTemplate1.ToString());
+
+            await pdf.GeneratePDF("facturadeprueba.xml", html, Program.globalVariables.DirectoryPath,iText.Kernel.Geom.PageSize.A4);
         }
+
+        private void empresaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmCompany frmCompany = new frmCompany();
+            frmCompany.ShowDialog();
+        }
+
     }
 }

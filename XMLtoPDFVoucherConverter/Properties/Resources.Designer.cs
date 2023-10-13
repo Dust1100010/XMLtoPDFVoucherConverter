@@ -62,30 +62,30 @@ namespace XMLtoPDFVoucherConverter.Properties {
         
         /// <summary>
         ///   Busca una cadena traducida similar a &lt;!DOCTYPE html&gt;
-        ///&lt;html xmlns=&quot;http://www.w3.org/1999/xhtml&quot;&gt;
+        ///&lt;html lang=&quot;es&quot;&gt;
         ///
         ///&lt;head&gt;
         ///    &lt;meta charset=&quot;UTF-8&quot;&gt;
-        ///    &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
-        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
-        ///    &lt;title&gt; @NOMBRE_BOLETA&lt;/title&gt;
+        ///    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+        ///    &lt;title&gt;@COMPANY_ID@VOUCHER_ID&lt;/title&gt;
         ///
         ///    &lt;style&gt;
         ///        body {
-        ///            font-size: 13px;
+        ///            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        ///            padding: 20px;
+        ///            font-size: 9px;
         ///        }
         ///        
-        ///        .borde-general {
-        ///            border: 1px solid black;
+        ///        .container {
+        ///            /*border: 1px solid red;*/
+        ///            background-color: white;
+        ///            padding: 0px 2px;
         ///        }
-        ///        
-        ///        .ruc {
-        ///            padding: 2px;
-        ///            border: 1px solid b [resto de la cadena truncado]&quot;;.
+        ///     [resto de la cadena truncado]&quot;;.
         /// </summary>
-        internal static string comprobanteElectronico {
+        internal static string VoucherTemplate1 {
             get {
-                return ResourceManager.GetString("comprobanteElectronico", resourceCulture);
+                return ResourceManager.GetString("VoucherTemplate1", resourceCulture);
             }
         }
     }

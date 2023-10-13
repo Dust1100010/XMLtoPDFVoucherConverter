@@ -8,28 +8,43 @@ namespace XMLtoPDFVoucherConverter
 {
     public class XML
     {
-        public List<string> AddXmlNamesToList(List<string> names, List<string> xmlListNames)
+        public List<string> AddXmlNamesToList(List<string> paths)
         {
-            if(xmlListNames == null) xmlListNames = new List<string>();
-
-            foreach (var name in names)
-            {
-                if (!ExistXmlOnList(name, xmlListNames)) xmlListNames.Add(name);
-            }
-
-            return xmlListNames;
-        }
-        
-        public List<string> AddXmlPathsToList(List<string> paths, List<string> xmlListPaths)
-        {
-            if (xmlListPaths == null) xmlListPaths = new List<string>();
-
+            List<string> names = new List<string>();
+            if (paths == null) paths = new List<string>();
             foreach (var path in paths)
             {
-                if (!ExistXmlOnList(path, xmlListPaths)) xmlListPaths.Add(path);
+                names.Add(Path.GetFileName(path));
+            }
+            return names;
+        }
+        
+        public List<string> AddXmlPathsToList(List<string> paths)
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog();
+                openFileDialog.Multiselect = true;
+                openFileDialog.Title = "Elige los archivos XML";
+                openFileDialog.Filter = "Archivos XML|*.xml";
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (openFileDialog.SafeFileNames.ToList() == null)
+                        throw new Exception("Elige archivos XML");
+
+                    if (paths == null) paths = new List<string>();
+                    foreach (var path in openFileDialog.FileNames.ToList())
+                    {
+                        if (!ExistXmlOnList(path, paths)) paths.Add(path);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "PDFVoucherConverter", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            return xmlListPaths;
+            return paths;
         }
 
         private bool ExistXmlOnList(string name, List<string> xmlList)
@@ -45,5 +60,6 @@ namespace XMLtoPDFVoucherConverter
             }
             return exist;
         }
+
     }
 }
